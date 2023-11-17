@@ -14,13 +14,14 @@ function Todo() {
   // Funciones de notificación para eventos
   const notifyTaskDeleted = () => toast.error('Tarea Eliminada');
   const notifyAllTasksDeleted = () => toast.warn('Todas las tareas fueron eliminadas');
+  const notifyTaskAdded = () => toast.success('Tarea Agregada');
 
   // Efecto para cargar la lista desde la API cuando el componente se monta
   useEffect(() => {
     fetchTasks();
-  }, []); 
+  }, []);
 
-  // Función para obtener las tareas desde la API
+  // Función para obtener las tareas desde la API (solicitud GET)
   const fetchTasks = () => {
     axios.get('https://playground.4geeks.com/apis/fake/todos/user/cfabbroni')
       .then(response => {
@@ -38,7 +39,7 @@ function Todo() {
       });
   };
 
-  // Función para crear un nuevo usuario
+  // Función para crear un nuevo usuario (solicitud POST)
   const createUser = () => {
     axios.post('https://playground.4geeks.com/apis/fake/todos/user/cfabbroni', [])
       .then(response => {
@@ -49,7 +50,7 @@ function Todo() {
       .catch(error => console.error('Error creating user:', error));
   };
 
-  // Función para sincronizar las tareas con el servidor
+  // Función para sincronizar las tareas con el servidor (solicitud PUT)
   const syncTasksWithServer = (updatedTasks, addedTask) => {
     axios.put('https://playground.4geeks.com/apis/fake/todos/user/cfabbroni', updatedTasks)
       .then(response => {
@@ -60,9 +61,6 @@ function Todo() {
       })
       .catch(error => console.error('Error syncing tasks with server:', error));
   };
-
-  // Función de notificación para agregar tarea
-  const notifyTaskAdded = () => toast.success('Tarea Agregada');
 
   // Maneja la adición de una nueva tarea
   const handleAddTask = () => {
@@ -78,7 +76,7 @@ function Todo() {
   // Maneja la eliminación de una tarea específica
   const handleDeleteTask = (index) => {
     const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, done: true } : task //Cambia el estado de 'done' a 'true'
+      i === index ? { ...task, done: true } : task //Cambia el estado de 'done' a true
     );
     setTasks(updatedTasks);
     syncTasksWithServer(updatedTasks);
@@ -136,6 +134,8 @@ function Todo() {
       {remainingTasks > 0 && (
         <ul className="list-group text-left">
           {tasks.map((task, index) => (
+            // Verifica si la tarea está marcada como completada (done: true)
+            // Si es así, se omite (null), de lo contrario, se renderiza el componente TaskItem
             task.done ? null : (
               <TaskItem
                 key={index}
