@@ -18,7 +18,7 @@ function Todo() {
   // Efecto para cargar la lista desde la API cuando el componente se monta
   useEffect(() => {
     fetchTasks();
-  }, []); // El segundo parámetro [] asegura que esto solo se ejecute una vez al montar el componente
+  }, []); 
 
   // Función para obtener las tareas desde la API
   const fetchTasks = () => {
@@ -29,10 +29,10 @@ function Todo() {
       .catch(error => {
         // Verifica si el error es porque el usuario no existe
         if (error.response && error.response.data && error.response.data.msg === "The user cfabbroni doesn't exists") {
-          // El usuario no existe, realiza una solicitud POST para crearlo
+          // Si el usuario no existe, realiza una solicitud POST para crearlo
           createUser();
         } else {
-          // Otro tipo de error, imprímelo en la consola
+          // Otro tipo de error
           console.error('Error fetching tasks:', error);
         }
       });
@@ -78,7 +78,7 @@ function Todo() {
   // Maneja la eliminación de una tarea específica
   const handleDeleteTask = (index) => {
     const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, done: true } : task
+      i === index ? { ...task, done: true } : task //Cambia el estado de 'done' a 'true'
     );
     setTasks(updatedTasks);
     syncTasksWithServer(updatedTasks);
