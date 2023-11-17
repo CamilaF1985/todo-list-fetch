@@ -52,7 +52,10 @@ function Todo() {
 
   // Función para sincronizar las tareas con el servidor (solicitud PUT)
   const syncTasksWithServer = (updatedTasks, addedTask) => {
-    axios.put('https://playground.4geeks.com/apis/fake/todos/user/cfabbroni', updatedTasks)
+    axios.put(
+      'https://playground.4geeks.com/apis/fake/todos/user/cfabbroni',
+      updatedTasks // Envía directamente el arreglo actualizado sin la tarea eliminada
+    )
       .then(response => {
         console.log(response);
         if (addedTask) {
@@ -75,9 +78,7 @@ function Todo() {
 
   // Maneja la eliminación de una tarea específica
   const handleDeleteTask = (index) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, done: true } : task //Cambia el estado de 'done' a true
-    );
+    const updatedTasks = tasks.filter((_, i) => i !== index); // Filtra la tarea que se va a eliminar
     setTasks(updatedTasks);
     syncTasksWithServer(updatedTasks);
     notifyTaskDeleted();
@@ -85,8 +86,7 @@ function Todo() {
 
   // Maneja la eliminación de todas las tareas
   const handleDeleteAllTasks = () => {
-    // Cambia el estado 'done' a true para todas las tareas
-    const updatedTasks = tasks.map(task => ({ ...task, done: true }));
+    const updatedTasks = [{ label: 'Example task', done: false }];
     setTasks(updatedTasks);
     syncTasksWithServer(updatedTasks);
     notifyAllTasksDeleted();
@@ -134,8 +134,6 @@ function Todo() {
       {remainingTasks > 0 && (
         <ul className="list-group text-left">
           {tasks.map((task, index) => (
-            // Verifica si la tarea está marcada como completada (done: true)
-            // Si es así, se omite (null), de lo contrario, se renderiza el componente TaskItem
             task.done ? null : (
               <TaskItem
                 key={index}
@@ -165,6 +163,9 @@ function Todo() {
 }
 
 export default Todo;
+
+
+
 
 
 
