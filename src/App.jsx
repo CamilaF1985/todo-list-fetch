@@ -23,8 +23,30 @@ function Todo() {
   // Función para obtener las tareas desde la API
   const fetchTasks = () => {
     axios.get('https://playground.4geeks.com/apis/fake/todos/user/cfabbroni')
-      .then(response => setTasks(response.data))
-      .catch(error => console.error('Error fetching tasks:', error));
+      .then(response => {
+        setTasks(response.data);
+      })
+      .catch(error => {
+        // Verifica si el error es porque el usuario no existe
+        if (error.response && error.response.data && error.response.data.msg === "The user cfabbroni doesn't exists") {
+          // El usuario no existe, realiza una solicitud POST para crearlo
+          createUser();
+        } else {
+          // Otro tipo de error, imprímelo en la consola
+          console.error('Error fetching tasks:', error);
+        }
+      });
+  };
+
+  // Función para crear un nuevo usuario
+  const createUser = () => {
+    axios.post('https://playground.4geeks.com/apis/fake/todos/user/cfabbroni', [])
+      .then(response => {
+        console.log('User created successfully:', response);
+        // Después de crear el usuario, vuelve a llamar a fetchTasks para obtener las tareas actualizadas
+        fetchTasks();
+      })
+      .catch(error => console.error('Error creating user:', error));
   };
 
   // Función para sincronizar las tareas con el servidor
@@ -65,13 +87,13 @@ function Todo() {
 
   // Maneja la eliminación de todas las tareas
   const handleDeleteAllTasks = () => {
-    const temporaryTask = { label: 'Temporary Task', done: true };
-    const updatedTasks = [temporaryTask];
+    // Cambia el estado 'done' a true para todas las tareas
+    const updatedTasks = tasks.map(task => ({ ...task, done: true }));
     setTasks(updatedTasks);
     syncTasksWithServer(updatedTasks);
     notifyAllTasksDeleted();
   };
-  
+
   // Maneja el cambio en la entrada de texto
   const handleInputChange = (e) => {
     setNewTask(e.target.value);
