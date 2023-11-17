@@ -54,7 +54,7 @@ function Todo() {
   const syncTasksWithServer = (updatedTasks, addedTask) => {
     axios.put(
       'https://playground.4geeks.com/apis/fake/todos/user/cfabbroni',
-      updatedTasks 
+      updatedTasks
     )
       .then(response => {
         console.log(response);
@@ -84,12 +84,16 @@ function Todo() {
     notifyTaskDeleted();
   };
 
-  // Maneja la eliminación de todas las tareas
+  // Maneja la eliminación de todas las tareas (solicitud DELETE)
   const handleDeleteAllTasks = () => {
-    const updatedTasks = [{ label: 'Example task', done: false }];
-    setTasks(updatedTasks);
-    syncTasksWithServer(updatedTasks);
-    notifyAllTasksDeleted();
+    axios.delete('https://playground.4geeks.com/apis/fake/todos/user/cfabbroni')
+      .then(response => {
+        console.log(response);
+        const updatedTasks = [];
+        setTasks(updatedTasks);
+        notifyAllTasksDeleted();
+      })
+      .catch(error => console.error('Error deleting all tasks:', error));
   };
 
   // Maneja el cambio en la entrada de texto
