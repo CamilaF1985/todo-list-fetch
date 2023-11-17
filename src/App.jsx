@@ -54,7 +54,7 @@ function Todo() {
   const syncTasksWithServer = (updatedTasks, addedTask) => {
     axios.put(
       'https://playground.4geeks.com/apis/fake/todos/user/cfabbroni',
-      updatedTasks // Envía directamente el arreglo actualizado sin la tarea eliminada
+      updatedTasks 
     )
       .then(response => {
         console.log(response);
@@ -114,7 +114,7 @@ function Todo() {
     setHoveredIndex(null);
   };
 
-  // Calcula la cantidad de tareas restantes (sin completar)
+  // Calcula la cantidad de tareas restantes 
   const remainingTasks = tasks.filter(task => !task.done).length;
 
   // Renderiza la aplicación de lista de tareas
@@ -134,19 +134,17 @@ function Todo() {
       {remainingTasks > 0 && (
         <ul className="list-group text-left">
           {tasks.map((task, index) => (
-            task.done ? null : (
-              <TaskItem
-                key={index}
-                task={task}
-                index={index}
-                hoveredIndex={hoveredIndex}
-                onDelete={handleDeleteTask}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                isLast={index === tasks.length - 1}
-                remainingTasks={remainingTasks}
-              />
-            )
+            <TaskItem
+              key={index}
+              task={task}
+              index={index}
+              hoveredIndex={hoveredIndex}
+              onDelete={handleDeleteTask}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              isLast={index === tasks.length - 1}
+              remainingTasks={remainingTasks}
+            />
           ))}
         </ul>
       )}
@@ -160,6 +158,7 @@ function Todo() {
       <ToastContainer />
     </div>
   );
+
 }
 
 export default Todo;
